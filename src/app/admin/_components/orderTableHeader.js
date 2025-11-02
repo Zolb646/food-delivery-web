@@ -1,9 +1,14 @@
 import { RxCaretSort } from "react-icons/rx";
 
-export const OrderTableHeader = () => {
+export const OrderTableHeader = ({ selectAll, setSelectAll }) => {
   return (
     <div className="w-full h-14 flex items-center bg-[#f2f0f0] justify-between border-b border-[#e4e4e7] 2xl:px-5">
-      <input type="checkbox" className="size-4.5 mx-5" />
+      <input
+        type="checkbox"
+        className="size-4.5 mx-5"
+        checked={selectAll}
+        onChange={(e) => setSelectAll(e.target.checked)}
+      />
       <div className="pl-4 pr-6 gap-2.5 text-base">№</div>
       <p className="px-5 font-medium text-[#71717A] w-2xs">Customer</p>
       <p className="px-5 font-medium text-[#71717A] w-43">Food</p>
