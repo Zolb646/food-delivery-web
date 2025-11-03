@@ -42,7 +42,6 @@ export default function AdminPage() {
               {["DELIVERED", "PENDING", "CANCELLED"].map((status) => (
                 <button
                   key={status}
-                  onClick={() => setSelectedStatus(status)}
                   className={`px-4 py-1.5 rounded-full text-sm transition-all duration-150 
                     `}
                 >

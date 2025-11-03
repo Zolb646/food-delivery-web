@@ -76,7 +76,11 @@ export const OrderSection = ({ setIsOpen }) => {
     <div className="w-[80%] mt-6 flex flex-col items-end mb-15 justify-between">
       <Profile />
       <div className="w-full h-[892px] bg-white rounded-lg border-2 border-[#e4e4e7]">
-        <OrderHeader setIsOpen={setIsOpen} selectedCount={selectedCount} />
+        <OrderHeader
+          setIsOpen={setIsOpen}
+          selectedCount={selectedCount}
+          orders={data.length}
+        />
         <OrderTableHeader
           selectAll={selectAll}
           setSelectAll={handleSelectAll}

@@ -34,9 +34,8 @@ export const OrderList = ({
   orderId,
   foods,
 }) => {
+  const [checked, setChecked] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(status);
-
-  console.log("OrderList food:", foods);
 
   const patchData = async (newStatus) => {
     try {
@@ -56,20 +55,26 @@ export const OrderList = ({
     .toLocaleDateString("en-CA")
     .replace(/-/g, "/");
 
+  useEffect(() => {
+    setChecked(isChecked);
+  }, [isChecked]);
+
   const handleChange = (e) => {
-    handleCheckboxChange(e.target.checked);
+    const value = e.target.checked;
+    setChecked(value);
+    handleCheckboxChange(value);
   };
 
   return (
     <div
       className={`w-full h-[63px] flex items-center justify-between border-b border-[#e4e4e7] 2xl:px-5 ${className} ${
-        isChecked ? "bg-[#f2f0f0]" : "bg-white"
+        checked ? "bg-[#f2f0f0]" : "bg-white"
       }`}
     >
       <input
         type="checkbox"
         className="size-4.5 mx-5"
-        checked={isChecked}
+        checked={checked}
         onChange={handleChange}
       />
       <div className="pl-4 pr-6 gap-2.5 text-base">{num}</div>
@@ -140,7 +145,7 @@ export const OrderList = ({
                       ? " cursor-not-allowed bg-red-500/10 border-red-500 border text-red-500"
                       : ""
                   }`}
-                  disabled={currentStatus === FormatStatus(item)}
+                  disabled={currentStatus === item}
                   onClick={() => {
                     patchData(item);
                     setCurrentStatus(item);
