@@ -8,17 +8,8 @@ import {
 import { useEffect, useState } from "react";
 import { FaAngleDown } from "react-icons/fa6";
 import { RxCaretSort } from "react-icons/rx";
-import { FormatStatus } from "./formatStatus";
-
-const options = {
-  method: "PATCH",
-  headers: {
-    accept: "application/json",
-    "Content-Type": "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDA0NjFlZTJkYjUyMTk3ODM1ZDlmZiIsImVtYWlsIjoiem9sYjY0NkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjE2MjU2NTUsImV4cCI6MTc2MjIzMDQ1NX0.lMosgQwpXzQlke1v_mWbVwE0R0vhMExXz-pZ0bLA4kE",
-  },
-};
+import { FormatStatus } from "../utils/formatStatus";
+import { patchOptions } from "../utils/patchOptions";
 
 export const OrderList = ({
   className,
@@ -36,9 +27,11 @@ export const OrderList = ({
 }) => {
   const [checked, setChecked] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(status);
+  const [isOpen, setIsOpen] = useState(false);
 
   const patchData = async (newStatus) => {
     try {
+      const options = patchOptions();
       const res = await fetch(`http://localhost:8000/food-order/${orderId}`, {
         ...options,
         body: JSON.stringify({ status: newStatus }),
@@ -62,7 +55,7 @@ export const OrderList = ({
   const handleChange = (e) => {
     const value = e.target.checked;
     setChecked(value);
-    handleCheckboxChange(value);
+    handleCheckboxChange(orderId, value); // pass orderId up
   };
 
   return (
@@ -97,10 +90,10 @@ export const OrderList = ({
                   className="flex justify-between items-center"
                 >
                   <img
-                    src={`http://localhost:8000${item.food.imageUrl}`}
+                    src={`http://localhost:8000${item.food?.imageUrl}`}
                     className="w-8 h-7.5 rounded-sm"
                   />
-                  <span className="w-39 text-xs">{item.food.foodName}</span>
+                  <span className="w-39 text-xs">{item.food?.foodName}</span>
                   <span className="text-xs">x {item.quantity}</span>
                 </div>
               ))}
@@ -118,7 +111,7 @@ export const OrderList = ({
       <p className="w-2xs px-5 font-medium text-[#71717A]">{Address}</p>
 
       <div className="w-3xs px-5 flex items-center justify-center">
-        <Popover>
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
             <Button
               variant="outline"
@@ -149,6 +142,7 @@ export const OrderList = ({
                   onClick={() => {
                     patchData(item);
                     setCurrentStatus(item);
+                    setIsOpen(false);
                   }}
                 >
                   {FormatStatus(item)}

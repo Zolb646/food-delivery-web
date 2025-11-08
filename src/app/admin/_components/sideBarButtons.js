@@ -9,7 +9,7 @@ export const SideBarButtons = () => {
   const pathname = usePathname();
 
   const isOrdersPage = pathname.includes("/admin/orders");
-  const isMenuPage = pathname === "/admin" || pathname.includes("/admin/food");
+  const isMenuPage = pathname === "/admin";
 
   return (
     <div className="w-full h-26 flex flex-col justify-between">

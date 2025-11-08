@@ -14,11 +14,15 @@ import {
 
 import { cn } from "@/lib/utils";
 
-export function DateRangePicker() {
-  const [date, setDate] = React.useState({
-    from: new Date(2025, 9, 28),
-    to: new Date(),
-  });
+export function DateRangePicker({ value, onChange }) {
+  const [internalDate, setInternalDate] = React.useState(
+    value || { from: null, to: null }
+  );
+
+  const handleSelect = (range) => {
+    setInternalDate(range);
+    if (onChange) onChange(range);
+  };
 
   return (
     <div className={cn("grid gap-2")}>
@@ -29,18 +33,18 @@ export function DateRangePicker() {
             variant={"outline"}
             className={cn(
               "w-[320px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !internalDate && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
+            {internalDate?.from ? (
+              internalDate.to ? (
                 <>
-                  {format(date.from, "d MMMM yyyy")} -{" "}
-                  {format(date.to, "d MMMM yyyy")}
+                  {format(internalDate.from, "d MMMM yyyy")} -{" "}
+                  {format(internalDate.to, "d MMMM yyyy")}
                 </>
               ) : (
-                format(date.from, "d MMMM yyyy")
+                format(internalDate.from, "d MMMM yyyy")
               )
             ) : (
               <span>Pick a date range</span>
@@ -51,9 +55,9 @@ export function DateRangePicker() {
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
+            defaultMonth={internalDate?.from}
+            selected={internalDate}
+            onSelect={handleSelect}
             numberOfMonths={2}
           />
         </PopoverContent>

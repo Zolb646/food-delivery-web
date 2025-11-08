@@ -2,30 +2,27 @@
 import { OrderHeader } from "../_components/orderHeader";
 import { OrderTableHeader } from "../_components/orderTableHeader";
 import { Profile } from "../_components/profile";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { OrderList } from "../_components/orderList";
 import { useEffect, useState } from "react";
 import { Pagination } from "../_components/pagination";
+import { getOptions } from "../utils/getOptions";
+import { patchOptions } from "../utils/patchOptions";
 
-const options = {
-  method: "GET",
-  headers: {
-    accept: "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDA0NjFlZTJkYjUyMTk3ODM1ZDlmZiIsImVtYWlsIjoiem9sYjY0NkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjE2MjU2NTUsImV4cCI6MTc2MjIzMDQ1NX0.lMosgQwpXzQlke1v_mWbVwE0R0vhMExXz-pZ0bLA4kE",
-  },
-};
-
-export const OrderSection = ({ setIsOpen }) => {
+export const OrderSection = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedCount, setSelectedCount] = useState(0);
+  const [selectedOrders, setSelectedOrders] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
   const [page, setPage] = useState(1);
+  const [dateRange, setDateRange] = useState({
+    from: new Date(),
+    to: new Date(),
+  });
   const ordersPerPage = 12;
 
   const getData = async () => {
     try {
+      const options = getOptions();
       setLoading(true);
       const res = await fetch("http://localhost:8000/food-order", options);
       if (!res.ok) throw new Error("Failed to fetch");
@@ -46,6 +43,11 @@ export const OrderSection = ({ setIsOpen }) => {
   const totalPages = Math.ceil(data.length / ordersPerPage);
   const startIndex = (page - 1) * ordersPerPage;
   const paginatedData = data.slice(startIndex, startIndex + ordersPerPage);
+  const filteredData = paginatedData.filter((order) => {
+    if (!dateRange || !dateRange.from || !dateRange.to) return true; // guard
+    const orderDate = new Date(order.createdAt);
+    return orderDate >= dateRange.from && orderDate <= dateRange.to;
+  });
 
   const getPageNumbers = () => {
     const pages = [];
@@ -65,21 +67,59 @@ export const OrderSection = ({ setIsOpen }) => {
 
   const handleSelectAll = (checked) => {
     setSelectAll(checked);
-    setSelectedCount(checked ? paginatedData.length : 0);
+    if (checked) {
+      const pageOrderIds = paginatedData.map((o) => o._id);
+      setSelectedOrders(pageOrderIds);
+    } else {
+      setSelectedOrders([]);
+    }
   };
 
-  const handleCheckboxChange = (checked) => {
-    setSelectedCount((prev) => prev + (checked ? 1 : -1));
+  const handleCheckboxChange = (orderId, checked) => {
+    setSelectedOrders((prev) =>
+      checked ? [...prev, orderId] : prev.filter((id) => id !== orderId)
+    );
   };
+
+  const bulkUpdateStatus = async (newStatus) => {
+    if (selectedOrders.length === 0) return;
+    try {
+      const options = patchOptions();
+      const res = await fetch("http://localhost:8000/food-order/bulk-update", {
+        ...options,
+        body: JSON.stringify({
+          orderIds: selectedOrders,
+          status: newStatus,
+        }),
+      });
+      console.log("Selected Orders IDs:", selectedOrders);
+
+      if (!res.ok) throw new Error("Failed to update orders");
+      await res.json();
+
+      getData();
+      setSelectedOrders([]);
+      setSelectAll(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    setSelectAll(false);
+    setSelectedOrders([]);
+  }, [page]);
 
   return (
     <div className="w-[80%] mt-6 flex flex-col items-end mb-15 justify-between">
       <Profile />
       <div className="w-full h-[892px] bg-white rounded-lg border-2 border-[#e4e4e7]">
         <OrderHeader
-          setIsOpen={setIsOpen}
-          selectedCount={selectedCount}
+          selectedCount={selectedOrders.length}
           orders={data.length}
+          setDateRange={setDateRange}
+          bulkUpdateStatus={bulkUpdateStatus}
+          dateRange={dateRange}
         />
         <OrderTableHeader
           selectAll={selectAll}
@@ -90,24 +130,26 @@ export const OrderSection = ({ setIsOpen }) => {
           <div className="w-full h-[600px] flex items-center justify-center text-gray-500 text-lg">
             Loading orders...
           </div>
-        ) : data?.length === 0 ? (
+        ) : filteredData?.length === 0 ? (
           <div className="w-full h-[600px] flex items-center justify-center text-gray-500 text-lg">
             No orders found.
           </div>
         ) : (
-          paginatedData.map((order, index) => (
+          filteredData.map((order, index) => (
             <OrderList
               key={index}
               foodnums={order.foodOrderItems.length}
               Total={order.totalPrice}
               Customer={order.user.email}
-              Address={"null"}
+              Address={order.user.address || "N/A"}
               date={order.createdAt}
               className={
-                index === paginatedData.length - 1 ? "rounded-b-sm" : ""
+                index === filteredData.length - 1 ? "rounded-b-sm" : ""
               }
-              isChecked={selectAll}
-              handleCheckboxChange={handleCheckboxChange}
+              isChecked={selectedOrders.includes(order._id)}
+              handleCheckboxChange={(checked) =>
+                handleCheckboxChange(order._id, checked)
+              }
               num={index + 1 + (page - 1) * ordersPerPage}
               status={order.status}
               orderId={order._id}
