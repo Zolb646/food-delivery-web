@@ -3,7 +3,11 @@ import { AddLocationModal } from "../_components/addLocationModal";
 import { LogoContainer } from "../_components/logoContainer";
 import { OpenSideSheet } from "../_components/openSideSheet";
 import { User } from "lucide-react";
-import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export const Header = () => {
   return (
