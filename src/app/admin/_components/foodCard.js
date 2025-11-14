@@ -3,8 +3,18 @@ import { patchOptions } from "../utils/patchOptions";
 import { useState } from "react";
 import { deleteOptions } from "../utils/deleteOptions";
 import { EditFoodModal } from "./editFoodModal";
+import Image from "next/image";
 
-export const FoodCard = ({ item, categories, getData }) => {
+const UPLOAD_PRESET = "swift delivery";
+const CLOUD_NAME = "drnymjaan";
+
+export const FoodCard = ({
+  item,
+  categories,
+  getData,
+  uploading,
+  setUploading,
+}) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     foodName: item.foodName || "",
@@ -15,7 +25,6 @@ export const FoodCard = ({ item, categories, getData }) => {
       : item.ingredients || "",
     price: item.price || "",
     imageUrl: item.imageUrl || "",
-    previewUrl: item.imageUrl ? `http://localhost:8000${item.imageUrl}` : "",
   });
 
   const patchData = async (uptadedBody) => {
@@ -32,6 +41,34 @@ export const FoodCard = ({ item, categories, getData }) => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+
+    const formDataUpload = new FormData();
+    formDataUpload.append("file", file);
+    formDataUpload.append("upload_preset", UPLOAD_PRESET);
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formDataUpload,
+      }
+    );
+
+    const data = await res.json();
+
+    setFormData((prev) => ({
+      ...prev,
+      imageUrl: data.secure_url,
+    }));
+
+    setUploading(false);
   };
 
   const handleSave = async () => {
@@ -69,13 +106,20 @@ export const FoodCard = ({ item, categories, getData }) => {
   };
 
   return (
-    <div className="w-68 h-60 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition relative overflow-hidden p-4 flex flex-col gap-4">
+    <div className="w-68 h-60 border border-gray-200 rounded-lg shadow-sm bg-white hover:shadow-md transition relative overflow-hidden px-4 pt-4 flex flex-col gap-4">
       <div className="w-full h-[130px] relative">
-        <img
-          src={`http://localhost:8000${item.imageUrl}`}
-          alt={item.foodName}
-          className="object-cover w-full h-full rounded-lg"
-        />
+        {formData.imageUrl ? (
+          <Image
+            src={formData.imageUrl}
+            alt={formData.foodName}
+            fill
+            className="object-cover w-full h-full rounded-lg"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 text-sm">
+            No Image
+          </div>
+        )}
         <EditFoodModal
           open={open}
           setOpen={setOpen}
@@ -85,6 +129,8 @@ export const FoodCard = ({ item, categories, getData }) => {
           categories={categories}
           deleteData={deleteData}
           handleSave={handleSave}
+          handleImageUpload={handleImageUpload}
+          uploading={uploading}
         />
       </div>
 

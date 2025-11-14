@@ -30,7 +30,6 @@ export const FoodMenuSection = () => {
 
       const catJson = await catRes.json();
       const foodRes = await fetch("http://localhost:8000/food", getOption);
-      if (!foodRes.ok) throw new Error("Failed to fetch foods");
 
       const foodJson = await foodRes.json();
       const foodsByCategory = await Promise.all(
@@ -61,8 +60,8 @@ export const FoodMenuSection = () => {
 
   const validateErrors = () => {
     const errors = {};
-    if (!newCategory.trim() || checkIfInputHasSpecialCharacters(newCategory)) {
-      errors.message = "Valid category name is required (letters only).";
+    if (!newCategory.trim()) {
+      errors.message = "Valid category name is required.";
     }
     if (newCategory.length < 3 || newCategory.length > 20) {
       errors.message = "Category name must be between 3 and 20 characters.";

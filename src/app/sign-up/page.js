@@ -116,6 +116,7 @@ export default function SignupPage() {
           setEmail={setEmail}
           email={email}
           handleClick={handleClick}
+          router={router}
         />
       )}
       {step === 2 && (

@@ -17,7 +17,6 @@ export function Footer() {
       if (!catRes.ok) throw new Error("Failed to fetch categories");
       const catJson = await catRes.json();
       setData(catJson);
-      console.log(catJson);
     } catch (err) {
       console.log(err);
     }
@@ -26,7 +25,7 @@ export function Footer() {
     getData();
   }, []);
   return (
-    <footer className="w-full py-10 bg-[#121212] flex flex-col items-center">
+    <footer className="w-full py-10 bg-[#121212] flex flex-col items-center mt-20">
       <div className="w-full bg-red-600 overflow-x-auto">
         <div className="w-full bg-red-600 overflow-hidden">
           <div className="flex whitespace-nowrap text-white font-semibold text-xl py-3 gap-8 animate-scroll">

@@ -40,14 +40,18 @@ export const OrderSection = () => {
     getData();
   }, []);
 
-  const totalPages = Math.ceil(data.length / ordersPerPage);
-  const startIndex = (page - 1) * ordersPerPage;
-  const paginatedData = data.slice(startIndex, startIndex + ordersPerPage);
-  const filteredData = paginatedData.filter((order) => {
-    if (!dateRange || !dateRange.from || !dateRange.to) return true; // guard
+  const filteredData = data.filter((order) => {
+    if (!dateRange || !dateRange.from || !dateRange.to) return true;
     const orderDate = new Date(order.createdAt);
     return orderDate >= dateRange.from && orderDate <= dateRange.to;
   });
+
+  const totalPages = Math.ceil(filteredData.length / ordersPerPage);
+  const startIndex = (page - 1) * ordersPerPage;
+  const paginatedData = filteredData.slice(
+    startIndex,
+    startIndex + ordersPerPage
+  );
 
   const getPageNumbers = () => {
     const pages = [];
@@ -110,6 +114,10 @@ export const OrderSection = () => {
     setSelectedOrders([]);
   }, [page]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [dateRange]);
+
   return (
     <div className="w-[80%] mt-6 flex flex-col items-end mb-15 justify-between">
       <Profile />
@@ -135,13 +143,13 @@ export const OrderSection = () => {
             No orders found.
           </div>
         ) : (
-          filteredData.map((order, index) => (
+          paginatedData.map((order, index) => (
             <OrderList
               key={index}
               foodnums={order.foodOrderItems.length}
               Total={order.totalPrice}
               Customer={order.user.email}
-              Address={order.user.address || "N/A"}
+              Address={order.userAddress || "N/A"}
               date={order.createdAt}
               className={
                 index === filteredData.length - 1 ? "rounded-b-sm" : ""

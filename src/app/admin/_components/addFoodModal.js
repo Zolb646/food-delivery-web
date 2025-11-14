@@ -9,6 +9,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import { FiPlus } from "react-icons/fi";
 import { LuImage } from "react-icons/lu";
 
@@ -21,9 +23,11 @@ export const AddFoodModal = ({
   setIngredientsText,
   ingredientsText,
   setPrice,
-  image,
-  setImage,
   handleAddFood,
+  handleImageUpload,
+  uploading,
+  imageUrl,
+  setImageUrl,
 }) => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -87,20 +91,26 @@ export const AddFoodModal = ({
             htmlFor="food-image"
             className={`w-full h-40 border-2 border-dashed border-[#2563EB33] rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition bg-[#2563EB0D] ${
               errorState.image ? "border-red-500" : ""
-            } ${image ? "p-0 border-none hover:bg-transparent" : "p-4"}`}
+            } ${imageUrl ? "p-0 border-none hover:bg-transparent" : "p-4"}`}
           >
-            {image ? (
+            {uploading ? (
+              <div className="flex flex-col items-center justify-center gap-2 text-blue-600">
+                <Loader2 className="h-8 w-8 animate-spin" />
+                <p className="text-sm font-medium">Uploading...</p>
+              </div>
+            ) : imageUrl ? (
               <>
                 <div className="relative w-full h-full rounded-lg overflow-hidden">
-                  <img
-                    src={image ? URL.createObjectURL(image.file) : ""}
+                  <Image
+                    src={imageUrl}
                     alt="Preview"
+                    fill
                     className="w-full h-full object-cover"
                   />
                   <button
                     type="button"
                     onClick={() => {
-                      setImage(null);
+                      setImageUrl("");
                     }}
                     className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-700 text-xs px-2 py-1 rounded-md"
                   >
@@ -124,15 +134,8 @@ export const AddFoodModal = ({
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  setImage({
-                    name: `/uploads/${file.name}`,
-                    file,
-                  });
-                }
-              }}
+              onChange={handleImageUpload}
+              disabled={uploading}
             />
             {errorState.image && (
               <p className="text-red-500 text-sm mt-2">{errorState.image}</p>

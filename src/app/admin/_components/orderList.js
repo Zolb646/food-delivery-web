@@ -10,6 +10,7 @@ import { FaAngleDown } from "react-icons/fa6";
 import { RxCaretSort } from "react-icons/rx";
 import { FormatStatus } from "../utils/formatStatus";
 import { patchOptions } from "../utils/patchOptions";
+import { formatDate } from "../utils/formattedDate";
 
 export const OrderList = ({
   className,
@@ -44,10 +45,6 @@ export const OrderList = ({
     }
   };
 
-  const formattedDate = new Date(date)
-    .toLocaleDateString("en-CA")
-    .replace(/-/g, "/");
-
   useEffect(() => {
     setChecked(isChecked);
   }, [isChecked]);
@@ -55,12 +52,12 @@ export const OrderList = ({
   const handleChange = (e) => {
     const value = e.target.checked;
     setChecked(value);
-    handleCheckboxChange(orderId, value); // pass orderId up
+    handleCheckboxChange(orderId, value);
   };
 
   return (
     <div
-      className={`w-full h-[63px] flex items-center justify-between border-b border-[#e4e4e7] 2xl:px-5 ${className} ${
+      className={`w-full min-h-[63px] flex items-center justify-between border-b border-[#e4e4e7] 2xl:px-5 ${className} ${
         checked ? "bg-[#f2f0f0]" : "bg-white"
       }`}
     >
@@ -90,7 +87,8 @@ export const OrderList = ({
                   className="flex justify-between items-center"
                 >
                   <img
-                    src={`http://localhost:8000${item.food?.imageUrl}`}
+                    src={item.food?.imageUrl}
+                    alt={item.food?.foodName}
                     className="w-8 h-7.5 rounded-sm"
                   />
                   <span className="w-39 text-xs">{item.food?.foodName}</span>
@@ -103,12 +101,14 @@ export const OrderList = ({
       </div>
 
       <div className="px-5 flex justify-between items-center w-43 font-medium text-[#71717A]">
-        {formattedDate}
+        {formatDate(date)}
       </div>
 
       <p className="px-5 w-43 font-medium text-[#71717A]">{Total}</p>
 
-      <p className="w-2xs px-5 font-medium text-[#71717A]">{Address}</p>
+      <p className="w-xs font-medium text-xs text-[#71717A] whitespace-break-spaces truncate">
+        {Address}
+      </p>
 
       <div className="w-3xs px-5 flex items-center justify-center">
         <Popover open={isOpen} onOpenChange={setIsOpen}>

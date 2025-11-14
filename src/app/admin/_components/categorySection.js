@@ -1,9 +1,11 @@
 "use client";
 import { FoodCard } from "./foodCard";
 import { useState } from "react";
-import { checkIfInputHasSpecialCharacters } from "../utils/validation";
 import { AddFoodModal } from "./addFoodModal";
 import { createOptions } from "../utils/createOptions";
+
+const UPLOAD_PRESET = "swift delivery";
+const CLOUD_NAME = "drnymjaan";
 
 export const CategorySection = ({
   category,
@@ -16,8 +18,9 @@ export const CategorySection = ({
   const [foodName, setFoodName] = useState("");
   const [price, setPrice] = useState(0);
   const [ingredientsText, setIngredientsText] = useState("");
-  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const validateErrors = () => {
     const errors = {};
@@ -27,8 +30,7 @@ export const CategorySection = ({
       foodName.length < 3 ||
       foodName.length > 50 ||
       foodName.startsWith(" ") ||
-      foodName.endsWith(" ") ||
-      checkIfInputHasSpecialCharacters(foodName)
+      foodName.endsWith(" ")
     ) {
       errors.foodName = "Invalid food name";
     }
@@ -38,11 +40,48 @@ export const CategorySection = ({
     if (!ingredientsText) {
       errors.ingredients = "Invalid ingredients";
     }
-    if (!image) {
+    if (!imageUrl) {
       errors.image = "Image is required";
     }
     setErrorState(errors);
     return Object.keys(errors).length === 0;
+  };
+
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await response.json();
+
+      return data.secure_url;
+    } catch (error) {
+      console.error("Cloudinary upload failed:", error);
+    }
+  };
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      setImageUrl(url);
+    } catch (err) {
+      console.log("Failed to upload logo: " + err.message);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleAddFood = async () => {
@@ -61,7 +100,7 @@ export const CategorySection = ({
           price: price,
           ingredients: arr,
           category: category._id,
-          imageUrl: image.name,
+          imageUrl: imageUrl,
         }),
       });
       console.log(
@@ -71,14 +110,14 @@ export const CategorySection = ({
         ingredientsText,
         category._id,
         arr,
-        image
+        imageUrl
       );
       await getData();
       setErrorState({});
       setFoodName("");
       setPrice(0);
       setIngredientsText("");
-      setImage(null);
+      setImageUrl(null);
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error adding food:", error);
@@ -99,13 +138,15 @@ export const CategorySection = ({
             setFoodName={setFoodName}
             setPrice={setPrice}
             setIngredientsText={setIngredientsText}
-            image={image}
-            setImage={setImage}
             errorState={errorState}
             isDialogOpen={isDialogOpen}
             setIsDialogOpen={setIsDialogOpen}
             category={category}
             ingredientsText={ingredientsText}
+            handleImageUpload={handleImageUpload}
+            uploading={uploading}
+            imageUrl={imageUrl}
+            setImageUrl={setImageUrl}
           />
 
           {Array.isArray(foods) && foods.length > 0 ? (
@@ -115,9 +156,10 @@ export const CategorySection = ({
                 item={item}
                 categories={categories}
                 errorState={errorState}
-                image={image}
-                setImage={setImage}
                 getData={getData}
+                handleImageUpload={handleImageUpload}
+                uploading={uploading}
+                setUploading={setUploading}
               />
             ))
           ) : (

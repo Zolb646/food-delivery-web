@@ -56,7 +56,11 @@ export default function LoginPage() {
   return (
     <div className="w-full h-screen flex items-center justify-center gap-20 pl-40">
       <div className="flex flex-col w-sm h-fit">
-        <Button variant={`outline`} className="w-9 mb-4">
+        <Button
+          variant={`outline`}
+          className="w-9 mb-4"
+          onClick={() => router.back()}
+        >
           <FaChevronLeft className="size-4" />
         </Button>
         <form onSubmit={handleLogin}>

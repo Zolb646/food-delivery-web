@@ -17,7 +17,7 @@ export const OrderTableHeader = ({ selectAll, setSelectAll }) => {
         <RxCaretSort className="size-5" />
       </div>
       <p className="px-5 w-43 font-medium text-[#71717A]">Total</p>
-      <p className="w-2xs px-5 font-medium text-[#71717A]">Delivery Address</p>
+      <p className="w-xs px-5 font-medium text-[#71717A]">Delivery Address</p>
       <div className="w-3xs px-5 font-medium text-[#71717A] flex items-center justify-center gap-5">
         Delivery State
         <RxCaretSort className="size-5" />

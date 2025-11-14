@@ -19,7 +19,8 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Trash } from "lucide-react";
+import { Loader2, Trash } from "lucide-react";
+import Image from "next/image";
 import { FiEdit3 } from "react-icons/fi";
 import { LuImage } from "react-icons/lu";
 
@@ -32,6 +33,8 @@ export const EditFoodModal = ({
   categories,
   deleteData,
   handleSave,
+  handleImageUpload,
+  uploading,
 }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -130,27 +133,25 @@ export const EditFoodModal = ({
           <label
             htmlFor="dish-image"
             className={`w-xs h-40 border-2 border-dashed border-[#2563EB33] rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition bg-[#2563EB0D] ${
-              formData.previewUrl
-                ? "p-0 border-none hover:bg-transparent"
-                : "p-4"
+              formData.imageUrl ? "p-0 border-none hover:bg-transparent" : "p-4"
             }`}
           >
-            {formData.previewUrl ? (
+            {uploading ? (
+              <div className="flex flex-col items-center justify-center gap-2 text-blue-600">
+                <Loader2 className="h-8 w-8 animate-spin" />
+                <p className="text-sm font-medium">Uploading...</p>
+              </div>
+            ) : formData.imageUrl ? (
               <div className="relative w-full h-full rounded-lg overflow-hidden">
-                <img
-                  src={formData.previewUrl}
+                <Image
+                  src={formData.imageUrl}
                   alt="Preview"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                 />
                 <button
                   type="button"
-                  onClick={() =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      imageUrl: "",
-                      previewUrl: "",
-                    }))
-                  }
+                  onClick={() => setFormData({ ...formData, imageUrl: "" })}
                   className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-700 text-xs px-2 py-1 rounded-md"
                 >
                   ✕
@@ -172,16 +173,8 @@ export const EditFoodModal = ({
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  setFormData((prev) => ({
-                    ...prev,
-                    imageUrl: `/uploads/${file.name}`,
-                    previewUrl: URL.createObjectURL(file),
-                  }));
-                }
-              }}
+              onChange={handleImageUpload}
+              disabled={uploading}
             />
           </label>
         </div>
