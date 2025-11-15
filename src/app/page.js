@@ -8,13 +8,7 @@ import { CategoryScroller } from "./_features/categoryScoller";
 export default function Home() {
   const [cart, setCart] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  // const router = useRouter();
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const token = localStorage.getItem("token");
-  //     if (!token) router.push("/login");
-  //   }
-  // }, []);
+
   return (
     <div className="h-full flex w-full flex-col bg-[#404040]">
       <div className="flex flex-col w-full pb-4 pt-20">

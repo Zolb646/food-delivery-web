@@ -1,6 +1,12 @@
+import { useRouter } from "next/navigation";
+
 export const LogoContainer = ({ logo, color, blackOrWhite, className }) => {
+  const router = useRouter();
   return (
-    <div className={`h-11 ${className}`}>
+    <div
+      className={`h-11 cursor-pointer ${className}`}
+      onClick={() => router.push("/")}
+    >
       <img src={logo} className="size-11" />
       <div className="flex flex-col text-center">
         <h1 className={`text-2xl font-extrabold ${blackOrWhite}`}>

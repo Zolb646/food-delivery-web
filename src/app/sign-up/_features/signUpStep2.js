@@ -4,7 +4,6 @@ import { FaChevronLeft } from "react-icons/fa6";
 
 export const SignUpStep2 = ({
   error,
-  loading,
   handleBackStep,
   handleSignup,
   setPassword,
@@ -42,13 +41,8 @@ export const SignUpStep2 = ({
         {error.confirmPassword && (
           <p className="text-red-500 mt-4">{error.password}</p>
         )}
-        <Button
-          type="button"
-          className={`w-full mt-6 ${error ? "bg-gray-600" : ""}`}
-          disabled={loading}
-          onClick={handleSignup}
-        >
-          {loading ? "Wait a minute" : "let's Get Started"}
+        <Button type="button" className={`w-full mt-6 `} onClick={handleSignup}>
+          {"let's Get Started"}
         </Button>
         <div className="w-full flex justify-center items-center mt-6 gap-2 text-[#71717A]">
           <span className="text-base">Already have an account?</span>

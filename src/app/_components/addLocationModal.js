@@ -20,6 +20,7 @@ export const AddLocationModal = ({ id }) => {
   const [address, setAddress] = useState("");
   const [tempAddress, setTempAddress] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  console.log(id);
 
   useEffect(() => {
     if (!id) return;
@@ -64,19 +65,26 @@ export const AddLocationModal = ({ id }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant={`outline`} className={`rounded-full text-red-500`}>
-          <IoLocationOutline className="size-5" />
-          {address ? (
-            <p className="w-xs truncate">{address}</p>
-          ) : (
-            <p className="flex gap-2.5">
-              Delivery address:
-              <span className="text-gray-500">Add Location</span>
-            </p>
-          )}
+        <Button
+          variant="outline"
+          className="rounded-full text-red-500 w-xs flex items-center justify-between"
+        >
+          <div className="flex items-center gap-2 truncate">
+            <IoLocationOutline className="size-5" />
+
+            {address ? (
+              <p className="truncate">{address}</p>
+            ) : (
+              <p className="flex gap-1 truncate">
+                <span>Delivery address:</span>
+                <span className="text-gray-500 truncate">Add Location</span>
+              </p>
+            )}
+          </div>
 
           {address ? (
             <div
+              className="cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 setAddress("");

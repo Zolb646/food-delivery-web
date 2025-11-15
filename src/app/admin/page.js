@@ -8,35 +8,46 @@ import { NoAccessPanel } from "../_components/noAccessPanel";
 
 export default function AdminPage() {
   const router = useRouter();
-  const [userRole, setUserRole] = useState(null);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (!token) router.push("/login");
-    }
-    try {
-      const token = localStorage.getItem("token");
-      const decoded = jwtDecode(token);
-      setUserRole(decoded.role);
 
-      if (decoded.role !== "ADMIN") {
-        setUserRole("NOT_ADMIN");
-      }
+  const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const savedToken = localStorage.getItem("token");
+
+    if (!savedToken) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(savedToken);
+
+      setToken(savedToken);
+      setUserRole(decoded.role || "NOT_ADMIN");
     } catch (err) {
       console.error("Invalid token", err);
-      router.push("/login");
+      setUserRole("NOT_ADMIN");
     }
+
+    setLoading(false);
   }, []);
-  if (userRole === null) {
+
+  if (loading) {
     return (
       <div className="w-full h-screen flex items-center justify-center text-gray-500">
         Checking permissions...
       </div>
     );
   }
-  if (userRole === "NOT_ADMIN") {
+
+  if (!token || userRole === "NOT_ADMIN") {
     return <NoAccessPanel router={router} />;
   }
+
   return (
     <div className="bg-[#f2f0f0] h-screen flex w-full gap-10">
       <SideBar logo={"favicon.ico"} />

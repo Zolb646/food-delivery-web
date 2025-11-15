@@ -2,8 +2,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { PriceNumber } from "./priceNumber";
-import { DashedSeparator } from "./separator";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { CartItem } from "./cartItem";
@@ -11,6 +9,10 @@ import { useEffect, useMemo, useState } from "react";
 import { createOptions } from "../admin/utils/createOptions";
 import { patchOptions } from "../admin/utils/patchOptions";
 import { PaymentInfoCard } from "./paymentInfoCard";
+import { AuthDialog } from "./authDialog";
+import { Dialog } from "@/components/ui/dialog";
+import { AuthDialogContent } from "./authDialogContent";
+import { useRouter } from "next/navigation";
 
 export const CartTabsContent = ({
   cart,
@@ -22,6 +24,8 @@ export const CartTabsContent = ({
   const [address, setAddress] = useState("");
   const [open, setOpen] = useState(false);
   const [errorState, setErrorState] = useState("");
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+
   const shipping = cart.length > 0 ? 3000 : 0;
 
   const updateQuantity = (id, newQty) => {
@@ -37,9 +41,10 @@ export const CartTabsContent = ({
   }, [cart]);
   const total = subTotal + shipping;
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     if (!id) return;
-    const token = localStorage.getItem("token");
 
     const fetchAddress = async () => {
       try {
@@ -76,8 +81,12 @@ export const CartTabsContent = ({
   };
 
   const handleCheckout = async () => {
+    if (!token) {
+      setShowAuthDialog(true);
+      return;
+    }
     if (!address) {
-      alert("Please enter your delivery address before checkout.");
+      setErrorState("Please fill address");
       return;
     }
     try {
@@ -141,8 +150,11 @@ export const CartTabsContent = ({
               <Textarea
                 id="delivery-location"
                 value={address}
-                placeholder="Please share your complete address"
+                placeholder={`${
+                  errorState ? errorState : "Please share your complete address"
+                }`}
                 onChange={(e) => setAddress(e.target.value)}
+                className={`${errorState && "border-red-500"}`}
               />
             </div>
           </CardFooter>
@@ -160,6 +172,12 @@ export const CartTabsContent = ({
           setOpen={setOpen}
           setCart={setCart}
         />
+        <Dialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
+          <AuthDialogContent
+            router={useRouter()}
+            authTitle={"Please sign in first"}
+          />
+        </Dialog>
       </TabsContent>
     </>
   );

@@ -45,8 +45,8 @@ export const OpenSideSheet = ({ cart, removeFromCart, setCart, id }) => {
   };
 
   useEffect(() => {
-    getOrders();
-  }, []);
+    if (id) getOrders();
+  }, [id]);
 
   return (
     <Sheet>

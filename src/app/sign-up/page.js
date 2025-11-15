@@ -14,7 +14,7 @@ export default function SignupPage() {
   const [error, setError] = useState({});
 
   const handleClick = () => {
-    router.push("login");
+    router.push("/login");
   };
 
   const getSavedStep = () => {
@@ -77,7 +77,7 @@ export default function SignupPage() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    console.log("Clicked");
     setError({});
 
     if (!validateInput()) {
@@ -99,8 +99,6 @@ export default function SignupPage() {
       router.push("/login");
     } catch (err) {
       setError({ general: err.message });
-    } finally {
-      setLoading(false);
     }
   };
 

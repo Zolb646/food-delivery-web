@@ -59,9 +59,22 @@ export function Footer() {
           <div className="min-w-48">
             <h3 className="text-[#71717A] font-semibold mb-3">MENU</h3>
             <ul className="grid grid-cols-2 gap-y-2 text-sm text-white">
-              {data.map((cat) => {
-                return <li key={cat._id}>{cat.categoryName}</li>;
-              })}
+              {data.map((cat) => (
+                <li
+                  key={cat._id}
+                  className="cursor-pointer hover:text-red-500 transition"
+                  onClick={() => {
+                    const el = document.getElementById(`category-${cat._id}`);
+                    if (el) {
+                      const y =
+                        el.getBoundingClientRect().top + window.scrollY - 190;
+                      window.scrollTo({ top: y, behavior: "smooth" });
+                    }
+                  }}
+                >
+                  {cat.categoryName}
+                </li>
+              ))}
             </ul>
           </div>
 
