@@ -93,7 +93,7 @@ export const CategorySection = ({
       const options = createOptions();
       if (!validateErrors()) return;
       console.log("Food added successfully");
-      await fetch("http://localhost:8000/food", {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/food`, {
         ...options,
         body: JSON.stringify({
           foodName: foodName,

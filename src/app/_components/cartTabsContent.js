@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
@@ -48,11 +47,14 @@ export const CartTabsContent = ({
 
     const fetchAddress = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/auth/${id}`, {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/${id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
         if (!res.ok) throw new Error(`Failed to fetch user: ${res.status}`);
 
         const data = await res.json();
@@ -68,7 +70,7 @@ export const CartTabsContent = ({
   const patchData = async () => {
     try {
       const options = patchOptions();
-      const res = await fetch(`http://localhost:8000/auth/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/${id}`, {
         ...options,
         body: JSON.stringify({ address }),
       });
@@ -92,7 +94,7 @@ export const CartTabsContent = ({
     try {
       await patchData();
       const options = createOptions();
-      const res = await fetch("http://localhost:8000/food-order", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/food-order`, {
         ...options,
         body: JSON.stringify({
           cart: cart.map((item) => ({

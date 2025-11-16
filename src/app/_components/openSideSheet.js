@@ -33,7 +33,7 @@ export const OpenSideSheet = ({ cart, removeFromCart, setCart, id }) => {
     try {
       const options = getOptions();
       const res = await fetch(
-        `http://localhost:8000/food-order/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/food-order/${id}`,
         options
       );
       const json = await res.json();

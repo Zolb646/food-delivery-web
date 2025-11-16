@@ -10,7 +10,7 @@ export const AllCategorySection = ({ setCart, cart }) => {
     try {
       const options = getOptions();
       const catRes = await fetch(
-        "http://localhost:8000/food-category",
+        `${process.env.NEXT_PUBLIC_API_URL}/food-category`,
         options
       );
       if (!catRes.ok) throw new Error("Failed to fetch categories");
@@ -18,7 +18,7 @@ export const AllCategorySection = ({ setCart, cart }) => {
       const foodsByCategory = await Promise.all(
         catJson.map(async (category) => {
           const res = await fetch(
-            `http://localhost:8000/food/${category._id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/food/${category._id}`,
             options
           );
           const data = await res.json();

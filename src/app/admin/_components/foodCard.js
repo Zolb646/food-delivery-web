@@ -30,10 +30,13 @@ export const FoodCard = ({
   const patchData = async (uptadedBody) => {
     try {
       const options = patchOptions();
-      const res = await fetch(`http://localhost:8000/food/${item._id}`, {
-        ...options,
-        body: JSON.stringify(uptadedBody),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/food/${item._id}`,
+        {
+          ...options,
+          body: JSON.stringify(uptadedBody),
+        }
+      );
       if (!res.ok) throw new Error("Failed to update status");
       const json = await res.json();
       console.log("Uptaded:", json);
@@ -93,7 +96,7 @@ export const FoodCard = ({
     try {
       const options = deleteOptions();
       const res = await fetch(
-        `http://localhost:8000/food/${item._id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/food/${item._id}`,
         options
       );
       const json = await res.json();
@@ -113,6 +116,8 @@ export const FoodCard = ({
             src={formData.imageUrl}
             alt={formData.foodName}
             fill
+            loading="eager"
+            sizes="130px"
             className="object-cover w-full h-full rounded-lg"
           />
         ) : (

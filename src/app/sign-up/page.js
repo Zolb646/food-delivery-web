@@ -66,7 +66,7 @@ export default function SignupPage() {
 
   const handleNextStep = (e) => {
     e.preventDefault();
-    if (!validateInput()) return;
+    if (!error) return;
     console.log("Next step validated", email);
     saveStep(step + 1);
   };
@@ -86,14 +86,17 @@ export default function SignupPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/auth/sign-up", {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-up`,
+        {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       if (!res.ok) throw new Error("Signup failed");
       router.push("/login");

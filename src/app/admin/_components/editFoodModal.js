@@ -77,7 +77,7 @@ export const EditFoodModal = ({
             }}
           >
             <SelectTrigger className="w-xs">
-              <Badge variant={`secondary`}>
+              <Badge variant={`secondary`} className={`px-2`}>
                 {formData.categoryName
                   ? formData.categoryName
                   : item.category.categoryName}
@@ -88,7 +88,9 @@ export const EditFoodModal = ({
                 <SelectLabel className={`w-50`}>All Dishes</SelectLabel>
                 {categories.map((cat, index) => (
                   <SelectItem className={`w-52`} value={cat._id} key={index}>
-                    <Badge variant={`secondary`}>{cat.categoryName}</Badge>
+                    <Badge variant={`secondary`} className={`px-2`}>
+                      {cat.categoryName}
+                    </Badge>
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -147,6 +149,8 @@ export const EditFoodModal = ({
                   src={formData.imageUrl}
                   alt="Preview"
                   fill
+                  sizes="160px"
+                  loader={uploading}
                   className="object-cover"
                 />
                 <button

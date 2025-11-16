@@ -11,7 +11,7 @@ export function Footer() {
     try {
       const options = getOptions();
       const catRes = await fetch(
-        "http://localhost:8000/food-category",
+        `${process.env.NEXT_PUBLIC_API_URL}/food-category`,
         options
       );
       if (!catRes.ok) throw new Error("Failed to fetch categories");

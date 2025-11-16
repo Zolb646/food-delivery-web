@@ -1,7 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { PiBowlSteam } from "react-icons/pi";
 import { TbStopwatch } from "react-icons/tb";
 import { FiMap } from "react-icons/fi";
 import { DashedSeparator } from "./separator";

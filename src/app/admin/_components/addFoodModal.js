@@ -105,6 +105,7 @@ export const AddFoodModal = ({
                     src={imageUrl}
                     alt="Preview"
                     fill
+                    sizes="160px"
                     className="w-full h-full object-cover"
                   />
                   <button

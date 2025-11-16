@@ -33,10 +33,13 @@ export const OrderList = ({
   const patchData = async (newStatus) => {
     try {
       const options = patchOptions();
-      const res = await fetch(`http://localhost:8000/food-order/${orderId}`, {
-        ...options,
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/food-order/${orderId}`,
+        {
+          ...options,
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
       if (!res.ok) throw new Error("Failed to update status");
       const json = await res.json();
       console.log("Updated:", json);

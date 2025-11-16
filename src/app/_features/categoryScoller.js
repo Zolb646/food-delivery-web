@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { getOptions } from "../admin/utils/getOptions";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-export const CategoryScroller = ({ onCategorySelect, selectedCategory }) => {
+export const CategoryScroller = ({ onCategorySelect }) => {
   const [categories, setCategories] = useState([]);
   const [scrollPos, setScrollPos] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0);
@@ -14,7 +14,10 @@ export const CategoryScroller = ({ onCategorySelect, selectedCategory }) => {
     const getCategories = async () => {
       try {
         const options = getOptions();
-        const res = await fetch("http://localhost:8000/food-category", options);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/food-category`,
+          options
+        );
         if (!res.ok) throw new Error("Failed to fetch categories");
         const json = await res.json();
         setCategories(json);
@@ -30,17 +33,15 @@ export const CategoryScroller = ({ onCategorySelect, selectedCategory }) => {
     setScrollPos(el.scrollLeft);
     setMaxScroll(el.scrollWidth - el.clientWidth);
   };
-
   const scrollLeft = (e) => {
-    const el = e.target.nextSibling;
-    el.scrollBy({ left: -200, behavior: "smooth" });
+    const el = e.currentTarget.nextElementSibling;
+    el?.scrollBy({ left: -200, behavior: "smooth" });
   };
 
   const scrollRight = (e) => {
-    const el = e.target.previousSibling;
-    el.scrollBy({ left: 200, behavior: "smooth" });
+    const el = e.currentTarget.previousElementSibling;
+    el?.scrollBy({ left: 200, behavior: "smooth" });
   };
-
   const showLeft = scrollPos > 10;
   const showRight = scrollPos < maxScroll - 10;
 

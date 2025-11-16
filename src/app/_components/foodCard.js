@@ -3,10 +3,6 @@ import { Check } from "lucide-react";
 import { PriceNumber } from "./priceNumber";
 import { HiPlusSm } from "react-icons/hi";
 import { useState } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { FiX } from "react-icons/fi";
-import { QuantitySelector } from "./quantitySelector";
 import { AddToCartModal } from "./addToCartModal";
 
 export const FoodCard = ({ item, onClick, isInCart, addToCart }) => {

@@ -24,7 +24,10 @@ export const OrderSection = () => {
     try {
       const options = getOptions();
       setLoading(true);
-      const res = await fetch("http://localhost:8000/food-order", options);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/food-order`,
+        options
+      );
       if (!res.ok) throw new Error("Failed to fetch");
       const json = await res.json();
       setData(json.orders || []);
@@ -72,7 +75,7 @@ export const OrderSection = () => {
   const handleSelectAll = (checked) => {
     setSelectAll(checked);
     if (checked) {
-      const pageOrderIds = paginatedData.map((o) => o._id);
+      const pageOrderIds = filteredData.map((o) => o._id);
       setSelectedOrders(pageOrderIds);
     } else {
       setSelectedOrders([]);
@@ -89,13 +92,16 @@ export const OrderSection = () => {
     if (selectedOrders.length === 0) return;
     try {
       const options = patchOptions();
-      const res = await fetch("http://localhost:8000/food-order/bulk-update", {
-        ...options,
-        body: JSON.stringify({
-          orderIds: selectedOrders,
-          status: newStatus,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/food-order/bulk-update`,
+        {
+          ...options,
+          body: JSON.stringify({
+            orderIds: selectedOrders,
+            status: newStatus,
+          }),
+        }
+      );
       console.log("Selected Orders IDs:", selectedOrders);
 
       if (!res.ok) throw new Error("Failed to update orders");
@@ -110,11 +116,6 @@ export const OrderSection = () => {
   };
 
   useEffect(() => {
-    setSelectAll(false);
-    setSelectedOrders([]);
-  }, [page]);
-
-  useEffect(() => {
     setPage(1);
   }, [dateRange]);
 
@@ -124,7 +125,7 @@ export const OrderSection = () => {
       <div className="w-full h-[892px] bg-white rounded-lg border-2 border-[#e4e4e7]">
         <OrderHeader
           selectedCount={selectedOrders.length}
-          orders={data.length}
+          orders={filteredData.length}
           setDateRange={setDateRange}
           bulkUpdateStatus={bulkUpdateStatus}
           dateRange={dateRange}
@@ -145,7 +146,7 @@ export const OrderSection = () => {
         ) : (
           paginatedData.map((order, index) => (
             <OrderList
-              key={index}
+              key={order._id}
               foodnums={order.foodOrderItems.length}
               Total={order.totalPrice}
               Customer={order.user.email}

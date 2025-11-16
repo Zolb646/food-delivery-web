@@ -28,11 +28,14 @@ export const AddLocationModal = ({ id }) => {
 
     const fetchAddress = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/auth/${id}`, {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/${id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
         if (!res.ok) throw new Error(`Failed to fetch user: ${res.status}`);
 
         const data = await res.json();
@@ -49,7 +52,7 @@ export const AddLocationModal = ({ id }) => {
   const patchData = async () => {
     try {
       const options = patchOptions();
-      const res = await fetch(`http://localhost:8000/auth/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/${id}`, {
         ...options,
         body: JSON.stringify({ address: tempAddress }),
       });
