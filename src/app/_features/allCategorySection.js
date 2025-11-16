@@ -75,7 +75,9 @@ export const AllCategorySection = ({ setCart, cart }) => {
           </div>
         );
       })}
-      {loading && <Loader2 className="h-8 w-8 animate-spin" />}
+      <div className="w-full h-fit flex justify-center">
+        {loading && <Loader2 className="h-8 w-8 animate-spin" />}
+      </div>
     </div>
   );
 };
