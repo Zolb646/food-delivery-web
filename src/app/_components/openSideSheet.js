@@ -38,7 +38,6 @@ export const OpenSideSheet = ({ cart, removeFromCart, setCart, id }) => {
       );
       const json = await res.json();
       setOrders(json.orders || []);
-      console.log(json, "this is orders by id");
     } catch (err) {
       console.log(err);
     }

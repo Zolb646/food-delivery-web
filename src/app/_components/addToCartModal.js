@@ -71,7 +71,6 @@ export const AddToCartModal = ({
               <Button
                 className="rounded-full text-base py-5.5"
                 onClick={() => {
-                  console.log(item);
                   addToCart({ ...item, quantity });
                   setOpenModal(false);
                   setQuantity(1);

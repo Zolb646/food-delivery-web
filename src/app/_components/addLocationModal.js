@@ -20,7 +20,6 @@ export const AddLocationModal = ({ id }) => {
   const [address, setAddress] = useState("");
   const [tempAddress, setTempAddress] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  console.log(id);
 
   useEffect(() => {
     if (!id) return;
@@ -39,7 +38,6 @@ export const AddLocationModal = ({ id }) => {
         if (!res.ok) throw new Error(`Failed to fetch user: ${res.status}`);
 
         const data = await res.json();
-        console.log(data);
         setAddress(data.address || "");
       } catch (err) {
         console.error(err);
@@ -58,7 +56,6 @@ export const AddLocationModal = ({ id }) => {
       });
       if (!res.ok) throw new Error("Failed to update status");
       const json = await res.json();
-      console.log(json);
       setIsOpen(false);
       setAddress(tempAddress);
     } catch (err) {

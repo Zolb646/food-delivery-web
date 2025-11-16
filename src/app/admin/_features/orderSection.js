@@ -31,7 +31,6 @@ export const OrderSection = () => {
       if (!res.ok) throw new Error("Failed to fetch");
       const json = await res.json();
       setData(json.orders || []);
-      console.log("Fetched orders:", json);
     } catch (err) {
       console.error(err);
     } finally {
@@ -102,7 +101,6 @@ export const OrderSection = () => {
           }),
         }
       );
-      console.log("Selected Orders IDs:", selectedOrders);
 
       if (!res.ok) throw new Error("Failed to update orders");
       await res.json();

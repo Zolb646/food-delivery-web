@@ -67,7 +67,6 @@ export default function SignupPage() {
   const handleNextStep = (e) => {
     e.preventDefault();
     if (!error) return;
-    console.log("Next step validated", email);
     saveStep(step + 1);
   };
 
@@ -77,7 +76,6 @@ export default function SignupPage() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    console.log("Clicked");
     setError({});
 
     if (!validateInput()) {

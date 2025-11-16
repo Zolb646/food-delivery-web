@@ -92,7 +92,6 @@ export const CategorySection = ({
     try {
       const options = createOptions();
       if (!validateErrors()) return;
-      console.log("Food added successfully");
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/food`, {
         ...options,
         body: JSON.stringify({
@@ -103,15 +102,6 @@ export const CategorySection = ({
           imageUrl: imageUrl,
         }),
       });
-      console.log(
-        "Food added successfully",
-        foodName,
-        price,
-        ingredientsText,
-        category._id,
-        arr,
-        imageUrl
-      );
       await getData();
       setErrorState({});
       setFoodName("");

@@ -9,7 +9,6 @@ import { OrderFoodRow } from "./orderFoodRow";
 import { FormatStatus } from "../admin/utils/formatStatus";
 
 export const OrdersTabsContent = ({ orders }) => {
-  console.log(orders);
   return (
     <TabsContent value={`Order`} className={`mt-6 h-full`}>
       <Card className={`h-full flex-col justify-between px-4`}>

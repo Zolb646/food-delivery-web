@@ -42,7 +42,6 @@ export const OrderList = ({
       );
       if (!res.ok) throw new Error("Failed to update status");
       const json = await res.json();
-      console.log("Updated:", json);
     } catch (err) {
       console.error(err);
     }

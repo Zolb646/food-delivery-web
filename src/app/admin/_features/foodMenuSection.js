@@ -48,9 +48,6 @@ export const FoodMenuSection = () => {
 
       setCategories(catJson || []);
       setFood({ all: foodJson || [], byCategory: foodsByCategory || [] });
-      console.log("categorories", catJson);
-      console.log("foods", foodJson);
-      console.log("foodsByCategory", foodsByCategory);
     } catch (err) {
       console.error(err);
     }

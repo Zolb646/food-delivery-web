@@ -39,7 +39,6 @@ export const FoodCard = ({
       );
       if (!res.ok) throw new Error("Failed to update status");
       const json = await res.json();
-      console.log("Uptaded:", json);
       return json;
     } catch (err) {
       console.log(err);
@@ -100,7 +99,6 @@ export const FoodCard = ({
         options
       );
       const json = await res.json();
-      console.log("deleted:", json);
 
       await getData();
     } catch (err) {

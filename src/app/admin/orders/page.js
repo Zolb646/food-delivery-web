@@ -29,7 +29,6 @@ export default function AdminPage() {
       setToken(storedToken);
       setUserRole(decoded.role || "NOT_ADMIN");
     } catch (err) {
-      console.error("Invalid token", err);
       setUserRole("NOT_ADMIN");
     }
 

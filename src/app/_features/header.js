@@ -22,8 +22,6 @@ export const Header = ({ cart, setCart }) => {
       const decoded = jwtDecode(token);
       setEmail(decoded.email);
       setId(decoded.id);
-      console.log(decoded.email);
-      console.log(decoded.id);
     } catch (err) {
       console.error("Invalid token:", err);
     }

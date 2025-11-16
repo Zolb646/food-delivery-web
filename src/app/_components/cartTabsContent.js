@@ -107,7 +107,6 @@ export const CartTabsContent = ({
       });
       if (!res.ok) throw new Error("Failed to create order");
       const data = await res.json();
-      console.log("Order created:", data);
       setOpen(true);
       await getOrders();
     } catch (err) {

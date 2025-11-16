@@ -30,8 +30,6 @@ export const AllCategorySection = ({ setCart, cart }) => {
       );
       setData(catJson);
       setFood(foodsByCategory || []);
-      // console.log(catJson);
-      // console.log(foodsByCategory);
     } catch (err) {
       console.log(err);
     } finally {
@@ -58,7 +56,6 @@ export const AllCategorySection = ({ setCart, cart }) => {
     });
   };
 
-  //console.log(cart);
   return (
     <div className="w-full mx-auto flex flex-col gap-12 px-22 pt-4">
       {data.map((cat) => {

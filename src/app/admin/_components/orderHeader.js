@@ -17,11 +17,9 @@ export const OrderHeader = ({
 
   const handleSave = () => {
     if (selectedStatus) {
-      console.log("Updating orders:", selectedCount, "Status:", selectedStatus);
       bulkUpdateStatus(selectedStatus);
       setIsOpen(false);
       setSelectedStatus("");
-      console.log("Updating orders:", selectedCount, "Status:", selectedStatus);
     }
   };
 
