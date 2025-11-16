@@ -2,12 +2,15 @@
 import { useEffect, useState } from "react";
 import { EachCategory } from "../_components/eachCategory";
 import { getOptions } from "../admin/utils/getOptions";
+import { Loader, Loader2 } from "lucide-react";
 
 export const AllCategorySection = ({ setCart, cart }) => {
   const [data, setData] = useState([]);
   const [food, setFood] = useState([]);
+  const [loading, setLoading] = useState(false);
   const getData = async () => {
     try {
+      setLoading(true);
       const options = getOptions();
       const catRes = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/food-category`,
@@ -31,6 +34,8 @@ export const AllCategorySection = ({ setCart, cart }) => {
       // console.log(foodsByCategory);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -70,6 +75,7 @@ export const AllCategorySection = ({ setCart, cart }) => {
           </div>
         );
       })}
+      {loading && <Loader2 className="h-8 w-8 animate-spin" />}
     </div>
   );
 };
