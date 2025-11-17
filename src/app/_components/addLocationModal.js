@@ -15,16 +15,19 @@ import { FaAngleRight } from "react-icons/fa6";
 import { IoLocationOutline } from "react-icons/io5";
 import { patchOptions } from "../admin/utils/patchOptions";
 import { FiX } from "react-icons/fi";
+import { AuthDialogContent } from "./authDialogContent";
+import { useRouter } from "next/navigation";
 
 export const AddLocationModal = ({ id }) => {
   const [address, setAddress] = useState("");
   const [tempAddress, setTempAddress] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     if (!id) return;
-    const token = localStorage.getItem("token");
-
+    const savedToken = localStorage.getItem("token");
     const fetchAddress = async () => {
       try {
         const res = await fetch(
@@ -39,6 +42,7 @@ export const AddLocationModal = ({ id }) => {
 
         const data = await res.json();
         setAddress(data.address || "");
+        setToken(savedToken);
       } catch (err) {
         console.error(err);
       }
@@ -49,6 +53,7 @@ export const AddLocationModal = ({ id }) => {
 
   const patchData = async () => {
     try {
+      if (!token) setShowAuthDialog(true);
       const options = patchOptions();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/${id}`, {
         ...options,
@@ -113,6 +118,12 @@ export const AddLocationModal = ({ id }) => {
           <Button onClick={patchData}>Deliver Here</Button>
         </DialogFooter>
       </DialogContent>
+      <Dialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
+        <AuthDialogContent
+          router={useRouter()}
+          authTitle={"Please sign in first"}
+        />
+      </Dialog>
     </Dialog>
   );
 };
