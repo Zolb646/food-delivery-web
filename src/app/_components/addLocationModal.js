@@ -28,13 +28,15 @@ export const AddLocationModal = ({ id }) => {
   useEffect(() => {
     if (!id) return;
     const savedToken = localStorage.getItem("token");
+    setToken(savedToken);
+    if (!savedToken) return;
     const fetchAddress = async () => {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/${id}`,
           {
             headers: {
-              Authorization: "Bearer " + token,
+              Authorization: "Bearer " + savedToken,
             },
           }
         );
@@ -42,7 +44,6 @@ export const AddLocationModal = ({ id }) => {
 
         const data = await res.json();
         setAddress(data.address || "");
-        setToken(savedToken);
       } catch (err) {
         console.error(err);
       }
@@ -53,7 +54,10 @@ export const AddLocationModal = ({ id }) => {
 
   const patchData = async () => {
     try {
-      if (!token) setShowAuthDialog(true);
+      if (!token) {
+        setShowAuthDialog(true);
+        return;
+      }
       const options = patchOptions();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/${id}`, {
         ...options,

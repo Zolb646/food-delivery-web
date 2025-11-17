@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import { UserPopover } from "../_components/userPopover";
-import { AuthDialog } from "../_components/authDialog";
+import { Button } from "@/components/ui/button";
 
 export const Header = ({ cart, setCart }) => {
   const router = useRouter();
@@ -63,12 +63,13 @@ export const Header = ({ cart, setCart }) => {
             handleSignOut={handleSignOut}
           />
         ) : (
-          <AuthDialog
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            router={router}
-            authTitle={`Authentication`}
-          />
+          <Button
+            variant={`secondary`}
+            className={`rounded-full focus:bg-red-500 focus:text-white`}
+            onClick={() => router.push(`login`)}
+          >
+            Login
+          </Button>
         )}
       </div>
     </header>
