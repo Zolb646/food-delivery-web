@@ -81,10 +81,11 @@ export const OrderSection = () => {
     }
   };
 
-  const handleCheckboxChange = (orderId, checked) => {
-    setSelectedOrders((prev) =>
-      checked ? [...prev, orderId] : prev.filter((id) => id !== orderId)
-    );
+  const handleOrderSelect = (orderId, checked) => {
+    setSelectedOrders((prev) => {
+      if (checked) return [...prev, orderId];
+      return prev.filter((id) => id !== orderId);
+    });
   };
 
   const bulkUpdateStatus = async (newStatus) => {
@@ -151,12 +152,10 @@ export const OrderSection = () => {
               Address={order.userAddress || "N/A"}
               date={order.createdAt}
               className={
-                index === filteredData.length - 1 ? "rounded-b-sm" : ""
+                index === paginatedData.length - 1 ? "rounded-b-sm" : ""
               }
               isChecked={selectedOrders.includes(order._id)}
-              handleCheckboxChange={(checked) =>
-                handleCheckboxChange(order._id, checked)
-              }
+              handleCheckboxChange={handleOrderSelect}
               num={index + 1 + (page - 1) * ordersPerPage}
               status={order.status}
               orderId={order._id}
